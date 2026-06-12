@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 01 — Intro to the Web & HTML Basics | Mindloop Academy</title>
+<meta name="description" content="Bilingual (English/Arabic) reference for Session 1 of the Front-End path: how the web works, client & server, and core HTML tags.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#13121d;
+    --surface:#1b1a29;
+    --surface-2:#23223a;
+    --border:#33324a;
+    --border-soft:#2a2940;
+    --text:#ece9f7;
+    --text-dim:#9a96b8;
+    --text-faint:#6d6a8a;
+    --pink:#ff7aa8;
+    --amber:#ffcb6b;
+    --green:#9ece6a;
+    --cyan:#7dcfff;
+    --purple:#c4a6ff;
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'Inter',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --font-ar:'Tajawal',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.7;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--cyan);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  /* ===== layout shell ===== */
+  .shell{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    min-height:100vh;
+  }
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{
+      position:static;
+      height:auto;
+      border-right:none;
+      border-bottom:1px solid var(--border-soft);
+    }
+  }
+
+  /* ===== sidebar / file tree ===== */
+  .sidebar{
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    background:var(--surface);
+    border-right:1px solid var(--border-soft);
+    padding:1.5rem 0;
+  }
+  .sidebar-head{
+    padding:0 1.25rem 1.25rem;
+    border-bottom:1px solid var(--border-soft);
+    margin-bottom:.75rem;
+  }
+  .sidebar-head .dots{display:flex;gap:6px;margin-bottom:1rem;}
+  .sidebar-head .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.r{background:#ff6167;}
+  .dot.y{background:#ffbd2e;}
+  .dot.g{background:#27c93f;}
+  .sidebar-head .folder{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--text-dim);
+    letter-spacing:.02em;
+  }
+  .sidebar-head .folder span{color:var(--cyan);}
+  nav.tree{padding:.25rem .5rem;}
+  nav.tree a{
+    display:flex;
+    align-items:baseline;
+    gap:.6rem;
+    padding:.45rem .75rem;
+    border-radius:6px;
+    color:var(--text-dim);
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    line-height:1.5;
+    text-decoration:none;
+    transition:background .15s,color .15s;
+  }
+  nav.tree a:hover{background:var(--surface-2);color:var(--text);}
+  nav.tree a .fname{color:var(--text-faint);flex-shrink:0;}
+  nav.tree a:hover .fname{color:var(--text-dim);}
+  nav.tree a .flabel{
+    font-family:var(--font-body);
+    font-size:12.5px;
+    color:inherit;
+    opacity:.85;
+  }
+  nav.tree .group-label{
+    font-family:var(--font-mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--text-faint);
+    padding:1rem .75rem .35rem;
+  }
+
+  /* ===== main content ===== */
+  main{padding:0;}
+  .container{max-width:760px;margin:0 auto;padding:0 1.5rem;}
+
+  /* ===== hero ===== */
+  .hero{
+    border-bottom:1px solid var(--border-soft);
+    padding:3.5rem 0 3rem;
+  }
+  .window-bar{
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:2rem;
+  }
+  .window-bar .dot{width:11px;height:11px;border-radius:50%;}
+  .window-bar .path{
+    margin-left:.75rem;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--text-faint);
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--green);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:.75rem;
+  }
+  h1.title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2rem,5vw,2.9rem);
+    line-height:1.15;
+    letter-spacing:-.01em;
+    margin-bottom:1rem;
+  }
+  h1.title .accent{color:var(--pink);}
+  .lead{
+    color:var(--text-dim);
+    font-size:1.05rem;
+    max-width:38rem;
+    margin-bottom:.75rem;
+  }
+  .lead.ar{
+    font-family:var(--font-ar);
+    direction:rtl;
+    text-align:right;
+    font-size:1.05rem;
+  }
+  .track-line{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--text-faint);
+    margin-top:1.5rem;
+    padding-top:1.5rem;
+    border-top:1px dashed var(--border);
+  }
+  .track-line .seg{color:var(--amber);}
+
+  /* instructor card */
+  .instructor{
+    margin-top:1.75rem;
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:1rem 1.25rem;
+  }
+  .avatar{
+    width:46px;height:46px;border-radius:10px;
+    background:linear-gradient(0deg,var(--pink),var(--pink));
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);font-weight:700;
+    color:var(--pink);font-size:1.05rem;flex-shrink:0;
+  }
+  .instructor .who{flex:1;}
+  .instructor .name{font-weight:600;font-size:.98rem;}
+  .instructor .role{color:var(--text-dim);font-size:.85rem;}
+  .instructor .links{display:flex;gap:.6rem;flex-wrap:wrap;}
+  .instructor .links a{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:.35rem .6rem;
+    color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .instructor .links a:hover{
+    border-color:var(--cyan);
+    color:var(--cyan);
+    text-decoration:none;
+  }
+  @media (max-width:560px){
+    .instructor{flex-wrap:wrap;}
+    .instructor .links{width:100%;}
+  }
+
+  /* ===== sections ===== */
+  section.topic{
+    border-bottom:1px solid var(--border-soft);
+    padding:3rem 0;
+    scroll-margin-top:1.5rem;
+  }
+  section.topic:last-of-type{border-bottom:none;}
+
+  .topic-head{
+    display:flex;
+    align-items:center;
+    gap:.85rem;
+    margin-bottom:1.1rem;
+    flex-wrap:wrap;
+  }
+  .tag-chip{
+    font-family:var(--font-mono);
+    font-size:.95rem;
+    font-weight:500;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:.3rem .6rem;
+    color:var(--text);
+  }
+  .tag-chip .p{color:var(--text-faint);}
+  .tag-chip .t{color:var(--pink);}
+  .tag-chip.concept .t{color:var(--cyan);}
+  .topic-num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-faint);
+    letter-spacing:.08em;
+  }
+  h2.topic-title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.55rem;
+    line-height:1.3;
+    margin-bottom:1.15rem;
+  }
+  .topic-body p{margin-bottom:.85rem;color:var(--text);}
+  .topic-body ul{margin:.5rem 0 .9rem 1.25rem;color:var(--text);}
+  .topic-body ul li{margin-bottom:.4rem;}
+  .topic-body strong{color:var(--text);font-weight:600;}
+  .topic-body code{
+    font-family:var(--font-mono);
+    font-size:.85em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.05rem .35rem;
+    color:var(--amber);
+  }
+
+  .divider-ar{
+    display:flex;align-items:center;gap:.75rem;
+    margin:1.6rem 0 1.2rem;
+  }
+  .divider-ar::after{
+    content:"";flex:1;height:1px;background:var(--border-soft);
+  }
+  .divider-ar .lbl{
+    font-family:var(--font-ar);
+    font-size:.85rem;
+    color:var(--purple);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:.25rem .65rem;
+  }
+
+  .ar-block{
+    direction:rtl;
+    text-align:right;
+    font-family:var(--font-ar);
+    font-size:1.02rem;
+  }
+  .ar-block p{margin-bottom:.85rem;color:var(--text);}
+  .ar-block ul{margin:.5rem 1.25rem .9rem 0;color:var(--text);}
+  .ar-block ul li{margin-bottom:.4rem;}
+  .ar-block strong{color:var(--purple);font-weight:700;}
+  .ar-block code{
+    font-family:var(--font-mono);
+    direction:ltr;
+    display:inline-block;
+    font-size:.82em;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:.05rem .35rem;
+    color:var(--amber);
+  }
+
+  /* code blocks */
+  .code-box{
+    margin-top:1.4rem;
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .code-box .cb-head{
+    display:flex;align-items:center;gap:.5rem;
+    padding:.6rem .9rem;
+    border-bottom:1px solid var(--border-soft);
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--text-faint);
+  }
+  .code-box .cb-head .dot{width:8px;height:8px;border-radius:50%;}
+  .code-box pre{
+    margin:0;
+    padding:1rem 1.1rem;
+    overflow-x:auto;
+    font-family:var(--font-mono);
+    font-size:.82rem;
+    line-height:1.65;
+    color:var(--text);
+  }
+  .tg{color:var(--pink);}
+  .at{color:var(--amber);}
+  .vl{color:var(--green);}
+  .pn{color:var(--text-faint);}
+  .cm{color:var(--text-faint);font-style:italic;}
+  .tx{color:var(--text);}
+
+  /* small visual aids */
+  .flow{
+    display:flex;align-items:center;justify-content:center;
+    gap:.9rem;flex-wrap:wrap;
+    margin:1.4rem 0;
+    padding:1.4rem;
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+  }
+  .flow .box{
+    font-family:var(--font-mono);
+    font-size:.85rem;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:.7rem 1.1rem;
+    text-align:center;
+    background:var(--surface-2);
+  }
+  .flow .box .lbl{display:block;font-size:11px;color:var(--text-faint);margin-bottom:.2rem;}
+  .flow .arrow{
+    display:flex;flex-direction:column;align-items:center;
+    font-family:var(--font-mono);font-size:11px;color:var(--text-faint);
+    gap:.2rem;
+  }
+  .flow .arrow .line{color:var(--cyan);font-size:1.1rem;}
+
+  /* type variants table */
+  .variant-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:.6rem;
+    margin:1.2rem 0;
+  }
+  .variant-grid .v{
+    border:1px solid var(--border-soft);
+    border-radius:8px;
+    padding:.7rem .8rem;
+    background:var(--surface);
+    font-family:var(--font-mono);
+    font-size:.8rem;
+  }
+  .variant-grid .v .k{color:var(--amber);}
+  .variant-grid .v .out{color:var(--text-dim);margin-top:.35rem;display:block;}
+
+  /* SEO checklist */
+  .seo-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:.7rem;
+    margin-top:1.3rem;
+  }
+  .seo-grid .item{
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    background:var(--surface);
+    padding:.85rem .9rem;
+  }
+  .seo-grid .item .n{
+    font-family:var(--font-mono);
+    color:var(--green);font-size:.75rem;
+  }
+  .seo-grid .item .l{font-size:.85rem;margin-top:.25rem;}
+  .seo-grid .item .l.ar{font-family:var(--font-ar);direction:rtl;text-align:right;font-size:.85rem;}
+
+  /* assignment */
+  .assignment{
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:1.5rem 1.6rem;
+    margin-top:1rem;
+  }
+  .assignment h3{
+    font-family:var(--font-display);
+    font-size:1.05rem;
+    margin-bottom:.7rem;
+    color:var(--amber);
+  }
+  .assignment h3.ar{font-family:var(--font-ar);direction:rtl;text-align:right;}
+  .checklist{list-style:none;margin:0;padding:0;}
+  .checklist li{
+    display:flex;gap:.6rem;align-items:flex-start;
+    margin-bottom:.65rem;font-size:.92rem;
+  }
+  .checklist.ar li{direction:rtl;text-align:right;font-family:var(--font-ar);font-size:.95rem;flex-direction:row-reverse;}
+  .checklist li .box{
+    flex-shrink:0;margin-top:.18rem;
+    width:14px;height:14px;border:1px solid var(--border);
+    border-radius:3px;background:var(--surface-2);
+  }
+
+  /* footer */
+  footer{
+    padding:3rem 0 4rem;
+    text-align:center;
+  }
+  footer .sig{
+    font-family:var(--font-mono);
+    font-size:.8rem;
+    color:var(--text-faint);
+    margin-bottom:1.2rem;
+  }
+  footer .sig .accent{color:var(--pink);}
+  footer .flinks{
+    display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;
+    margin-bottom:1.2rem;
+  }
+  footer .flinks a{
+    font-family:var(--font-mono);font-size:12px;
+    border:1px solid var(--border);border-radius:6px;
+    padding:.4rem .8rem;color:var(--text-dim);
+  }
+  footer .flinks a:hover{border-color:var(--cyan);color:var(--cyan);text-decoration:none;}
+  footer .copy{font-size:.8rem;color:var(--text-faint);}
+
+  /* mobile nav toggle */
+  .mnav-toggle{display:none;}
+  @media (max-width:880px){
+    .sidebar nav.tree{
+      display:flex;flex-wrap:nowrap;overflow-x:auto;gap:.25rem;
+      padding:.5rem .75rem 1rem;
+    }
+    nav.tree a{flex-shrink:0;}
+    nav.tree .group-label{display:none;}
+    .sidebar-head{padding-bottom:.75rem;margin-bottom:0;}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ===================== SIDEBAR / FILE TREE ===================== -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+      <div class="folder"><span>front-end</span>/session-01/</div>
+    </div>
+    <nav class="tree">
+      <div class="group-label">Concepts</div>
+      <a href="#intro"><span class="fname">00</span><span class="flabel">Intro to the Web</span></a>
+      <a href="#html-history"><span class="fname">01</span><span class="flabel">What is HTML?</span></a>
+
+      <div class="group-label">Elements</div>
+      <a href="#headings"><span class="fname">02</span><span class="flabel">Headings</span></a>
+      <a href="#text-tags"><span class="fname">03</span><span class="flabel">p · br · hr</span></a>
+      <a href="#links-media"><span class="fname">04</span><span class="flabel">a · img</span></a>
+      <a href="#lists"><span class="fname">05</span><span class="flabel">ul · ol · li</span></a>
+      <a href="#tables"><span class="fname">06</span><span class="flabel">table</span></a>
+      <a href="#dl"><span class="fname">07</span><span class="flabel">dl · dt · dd</span></a>
+      <a href="#head-seo"><span class="fname">08</span><span class="flabel">head & SEO</span></a>
+      <a href="#empty-nested"><span class="fname">09</span><span class="flabel">empty vs nested</span></a>
+
+      <div class="group-label">Homework</div>
+      <a href="#assignment"><span class="fname">★</span><span class="flabel">Assignment</span></a>
+    </nav>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <main>
+    <div class="container">
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="window-bar">
+          <span class="dot" style="background:#ff6167"></span>
+          <span class="dot" style="background:#ffbd2e"></span>
+          <span class="dot" style="background:#27c93f"></span>
+          <span class="path">session-01.html — Front-End / React (12 × 3h)</span>
+        </div>
+        <div class="eyebrow">Mindloop Academy — Front-End Track</div>
+        <h1 class="title">Session 01 — Intro to the Web <span class="accent">&amp; HTML Basics</span></h1>
+        <p class="lead">A bilingual reference for everything covered in session one: how the web actually works, the relationship between client and server, and the core HTML tags every page is built from. English first, then the Arabic explanation underneath each topic.</p>
+        <p class="lead ar">صفحة مرجعية ثنائية اللغة لكل ما تم شرحه في الجلسة الأولى: كيف يعمل الويب، العلاقة بين العميل (Client) والخادم (Server)، وأهم وسوم HTML التي تُبنى عليها أي صفحة. الشرح الإنجليزي أولاً ثم الشرح بالعربي تحت كل موضوع.</p>
+
+        <div class="instructor">
+          <div class="avatar">YE</div>
+          <div class="who">
+            <div class="name">Yousef Eldbah</div>
+            <div class="role">Full-Stack Developer · Instructor, Mindloop Academy</div>
+          </div>
+          <div class="links">
+            <a href="https://www.linkedin.com/in/yousef-eldbah/" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a href="https://www.facebook.com/p/Mindloop-Academy-61561250038443/" target="_blank" rel="noopener">Mindloop Academy ↗</a>
+          </div>
+        </div>
+
+        <div class="track-line">Track: <span class="seg">Front-End → React</span> · 12 sessions × 3 hours · this page covers <span class="seg">Session 01</span></div>
+      </section>
+
+      <!-- ============ 00 INTRO TO THE WEB ============ -->
+      <section class="topic" id="intro">
+        <div class="topic-head">
+          <span class="tag-chip concept"><span class="p">//</span> intro</span>
+          <span class="topic-num">TOPIC 00</span>
+        </div>
+        <h2 class="topic-title">How the web works: front-end, back-end, client &amp; server</h2>
+        <div class="topic-body">
+          <p>Every website lives at the intersection of two worlds. The <strong>front-end</strong> is everything you see and interact with directly in the browser — layout, text, images, buttons. The <strong>back-end</strong> is the server-side logic, business rules, and data that power the site behind the scenes.</p>
+          <p>The <strong>client</strong> is the device or program that requests information. Your browser — Chrome, Firefox, Edge — is the client that sends requests and renders the HTML it gets back.</p>
+          <p>The <strong>server</strong> is a powerful machine or cloud service that stores the website's files (HTML, CSS, JavaScript) and databases, and waits for requests to respond to.</p>
+          <p>The learning path in front-end starts from this idea: understand how the web works, then learn the languages that build what the client displays — starting with HTML.</p>
+        </div>
+
+        <div class="flow">
+          <div class="box"><span class="lbl">browser</span>Client</div>
+          <div class="arrow"><span class="line">→</span>Request (HTTP/HTTPS)</div>
+          <div class="box"><span class="lbl">hosts files + DB</span>Server</div>
+          <div class="arrow"><span class="line">→</span>Response (HTML, CSS, JS)</div>
+          <div class="box"><span class="lbl">renders</span>Client</div>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p>كل موقع ويب بُني على فكرتين أساسيتين: <strong>الفرونت إند (Front-end)</strong> وهو كل شيء تراه وتتعامل معه مباشرة في المتصفح، و<strong>الباك إند (Back-end)</strong> وهو المنطق والبيانات اللي بتشغل الموقع من الخلف.</p>
+          <p><strong>الـ Client (العميل)</strong> هو الجهاز أو البرنامج اللي بيطلب البيانات — المتصفح (Chrome, Firefox, Edge) هو الـ Client اللي بيعرض صفحات HTML.</p>
+          <p><strong>الـ Server (الخادم)</strong> هو جهاز قوي أو خدمة سحابية بتستضيف ملفات الموقع (HTML, CSS, JS) وقواعد البيانات، وبيستقبل الطلبات ويرد عليها.</p>
+          <p>طريقة الاتصال بينهم بسيطة: المستخدم يفتح المتصفح ويدخل عنوان الموقع → المتصفح يبعت <strong>طلب (Request)</strong> للسيرفر عبر <code>HTTP/HTTPS</code> → السيرفر يرد بـ <strong>استجابة (Response)</strong> فيها ملفات HTML وموارد أخرى → المتصفح يعالج البيانات ويعرض الصفحة. مثال: لما تفتح فيسبوك، المتصفح بيطلب الصفحة، والسيرفر بيرجّع ملفات HTML وبياناتك، والمتصفح بيعرضها.</p>
+        </div>
+      </section>
+
+      <!-- ============ 01 WHAT IS HTML ============ -->
+      <section class="topic" id="html-history">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">html</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 01</span>
+        </div>
+        <h2 class="topic-title">What is HTML, and where did it come from?</h2>
+        <div class="topic-body">
+          <p><strong>HTML</strong> stands for <strong>HyperText Markup Language</strong>. It's a markup language, not a programming language — it describes the <em>structure</em> of content on the web: text, links, images, videos, and decoration hooks for CSS.</p>
+          <p>It was invented by <strong>Tim Berners-Lee</strong>, often called the "godfather of the web." He also built the first web page and laid the foundation for the World Wide Web itself.</p>
+          <p>The <strong>W3C</strong> (World Wide Web Consortium) sets the official standards for HTML. <strong>W3Schools</strong> is a popular learning site — useful for reference, but not the standards body.</p>
+          <p>In the 1990s, early browsers like <strong>Mosaic</strong> popularized the web visually for the first time. <strong>Netscape</strong> followed and dominated for years before its codebase eventually evolved into what we now know as <strong>Firefox</strong> (around 2008 onward).</p>
+          <p>Every HTML element is written as a <strong>tag</strong>: an opening tag, content, and a closing tag — e.g. <code>&lt;p&gt;text&lt;/p&gt;</code>. Some tags are <strong>empty / self-closing</strong> and never wrap content, like <code>&lt;br&gt;</code> and <code>&lt;img&gt;</code>. HTML tags are <strong>not case-sensitive</strong> (<code>&lt;HTML&gt;</code> works the same as <code>&lt;html&gt;</code>), but lowercase is the universal convention.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><strong>HTML</strong> هي اختصار <strong>HyperText Markup Language</strong>، وهي لغة توصيفية (Markup Language) وليست لغة برمجة — بتحدد <strong>هيكل</strong> المحتوى على الويب: نصوص، روابط، صور، فيديوهات، وأماكن للتنسيق بالـ CSS.</p>
+          <p>اخترعها <strong>Tim Berners-Lee</strong>، ولُقّب بـ "Godfather to the Web"، وهو نفس الشخص اللي صنع أول صفحة ويب وأساس شبكة الإنترنت العالمية (Web).</p>
+          <p><strong>W3C</strong> هو الجهة المسؤولة عن وضع معايير HTML الرسمية، أما <strong>W3Schools</strong> فهو موقع تعليمي مشهور للمرجعية فقط، وليس هو الجهة المعيارية.</p>
+          <p>في التسعينات ظهر متصفح <strong>Mosaic</strong> وكان أول متصفح اشتهر بعرض الصور والمحتوى بشكل بصري، ثم جاء <strong>Netscape</strong> وسيطر لسنوات، وبعد ذلك تطور كوده ليصبح متصفح <strong>Firefox</strong> الحالي (من حوالي 2008).</p>
+          <p>كل عنصر HTML يُكتب على شكل <strong>Tag</strong>: تاج فتح، محتوى، وتاج إغلاق — مثل <code>&lt;p&gt;نص&lt;/p&gt;</code>. بعض التاجات <strong>Empty (مفردة)</strong> مالها تاج إغلاق ولا محتوى بينها، زي <code>&lt;br&gt;</code> و <code>&lt;img&gt;</code>. تاجات HTML <strong>غير حساسة لحالة الأحرف</strong> (<code>&lt;HTML&gt;</code> زي <code>&lt;html&gt;</code>)، لكن الاتفاق العالمي إنها تُكتب بحروف صغيرة.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--text-faint)"></span> the basic skeleton of every HTML page</div>
+          <pre><span class="pn">&lt;!DOCTYPE html&gt;</span>
+<span class="pn">&lt;</span><span class="tg">html</span><span class="pn"> </span><span class="at">lang</span><span class="pn">=</span><span class="vl">"en"</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">head</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;</span><span class="tg">meta</span><span class="pn"> </span><span class="at">charset</span><span class="pn">=</span><span class="vl">"UTF-8"</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;</span><span class="tg">title</span><span class="pn">&gt;</span><span class="tx">My First Page</span><span class="pn">&lt;/</span><span class="tg">title</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;/</span><span class="tg">head</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">body</span><span class="pn">&gt;</span>
+    <span class="cm">&lt;!-- everything visible goes here --&gt;</span>
+  <span class="pn">&lt;/</span><span class="tg">body</span><span class="pn">&gt;</span>
+<span class="pn">&lt;/</span><span class="tg">html</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 02 HEADINGS ============ -->
+      <section class="topic" id="headings">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span> – <span class="p">&lt;</span><span class="t">h6</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 02</span>
+        </div>
+        <h2 class="topic-title">Headings &amp; page hierarchy</h2>
+        <div class="topic-body">
+          <p>Headings range from <code>&lt;h1&gt;</code> (largest, most important) down to <code>&lt;h6&gt;</code> (smallest). Every page should have exactly <strong>one <code>&lt;h1&gt;</code></strong> — usually the page's main title or name.</p>
+          <p>Search engines treat <code>&lt;h1&gt;</code> as the strongest signal of what the page is about. Getting the heading structure right is one of the most important things a beginner front-end developer can learn — it directly affects <strong>SEO (Search Engine Optimization)</strong>.</p>
+          <p>A typical profile page is structured like this: <code>&lt;h1&gt;</code> for the person's name, then <code>&lt;h2&gt;</code> for each major section — <strong>Profile</strong>, <strong>Experience</strong>, <strong>Contacts</strong> — with smaller headings or paragraphs nested inside each.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p>العناوين تتدرج من <code>&lt;h1&gt;</code> (الأكبر والأهم) إلى <code>&lt;h6&gt;</code> (الأصغر). كل صفحة لازم يكون فيها <strong>عنصر <code>&lt;h1&gt;</code> واحد فقط</strong> — وعادةً يكون العنوان الرئيسي أو اسم الصفحة.</p>
+          <p>محركات البحث بتعتبر <code>&lt;h1&gt;</code> أهم إشارة لمعرفة موضوع الصفحة. فهم ترتيب العناوين بشكل صحيح من أهم الأشياء اللي يتعلمها أي مطور Front-end مبدئي، لأنه بيأثر بشكل مباشر على <strong>السيو (SEO)</strong>.</p>
+          <p>صفحة بروفايل عادة بتُبنى كالتالي: <code>&lt;h1&gt;</code> لاسم الشخص، وبعدها <code>&lt;h2&gt;</code> لكل قسم رئيسي — مثل <strong>Profile</strong>، <strong>Experience</strong>، <strong>Contacts</strong> — وبداخل كل قسم عناوين أصغر أو فقرات.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--pink)"></span> example: a simple profile structure</div>
+          <pre><span class="pn">&lt;</span><span class="tg">h1</span><span class="pn">&gt;</span><span class="tx">Pascal van Anholt</span><span class="pn">&lt;/</span><span class="tg">h1</span><span class="pn">&gt;</span>
+
+<span class="pn">&lt;</span><span class="tg">h2</span><span class="pn">&gt;</span><span class="tx">Profile</span><span class="pn">&lt;/</span><span class="tg">h2</span><span class="pn">&gt;</span>
+<span class="pn">&lt;</span><span class="tg">p</span><span class="pn">&gt;</span><span class="tx">Short bio goes here...</span><span class="pn">&lt;/</span><span class="tg">p</span><span class="pn">&gt;</span>
+
+<span class="pn">&lt;</span><span class="tg">h2</span><span class="pn">&gt;</span><span class="tx">Experience</span><span class="pn">&lt;/</span><span class="tg">h2</span><span class="pn">&gt;</span>
+<span class="pn">&lt;</span><span class="tg">h3</span><span class="pn">&gt;</span><span class="tx">Junior Front-End Developer</span><span class="pn">&lt;/</span><span class="tg">h3</span><span class="pn">&gt;</span>
+
+<span class="pn">&lt;</span><span class="tg">h2</span><span class="pn">&gt;</span><span class="tx">Contacts</span><span class="pn">&lt;/</span><span class="tg">h2</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 03 TEXT TAGS ============ -->
+      <section class="topic" id="text-tags">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">br</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">hr</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 03</span>
+        </div>
+        <h2 class="topic-title">Paragraphs, line breaks &amp; horizontal rules</h2>
+        <div class="topic-body">
+          <p><code>&lt;p&gt;</code> wraps a block of text as a paragraph. The browser automatically adds spacing before and after it.</p>
+          <p><code>&lt;br&gt;</code> forces a line break <em>inside</em> the same paragraph, without adding the extra spacing a new <code>&lt;p&gt;</code> would. It's an empty tag — no closing tag needed.</p>
+          <p><code>&lt;hr&gt;</code> draws a horizontal line across the page, used to visually separate one section of content from another.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><code>&lt;p&gt;</code> بتلف نص على شكل فقرة، والمتصفح بيضيف مسافة قبلها وبعدها أوتوماتيك.</p>
+          <p><code>&lt;br&gt;</code> بتنزل لسطر جديد <em>داخل نفس الفقرة</em> من غير ما تضيف مسافة زيادة كأنها فقرة جديدة. وهي تاج Empty مالها تاج إغلاق.</p>
+          <p><code>&lt;hr&gt;</code> بترسم خط أفقي يفصل بين الأقسام بشكل بصري.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--green)"></span> p, br and hr together</div>
+          <pre><span class="pn">&lt;</span><span class="tg">p</span><span class="pn">&gt;</span><span class="tx">This is the first line.</span><span class="pn">&lt;</span><span class="tg">br</span><span class="pn">&gt;</span><span class="tx">This is the second line.</span><span class="pn">&lt;/</span><span class="tg">p</span><span class="pn">&gt;</span>
+
+<span class="pn">&lt;</span><span class="tg">hr</span><span class="pn">&gt;</span>
+
+<span class="pn">&lt;</span><span class="tg">p</span><span class="pn">&gt;</span><span class="tx">First section</span><span class="pn">&lt;/</span><span class="tg">p</span><span class="pn">&gt;</span>
+<span class="pn">&lt;</span><span class="tg">hr</span><span class="pn">&gt;</span>
+<span class="pn">&lt;</span><span class="tg">p</span><span class="pn">&gt;</span><span class="tx">Second section</span><span class="pn">&lt;/</span><span class="tg">p</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 04 LINKS & MEDIA ============ -->
+      <section class="topic" id="links-media">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">a</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">img</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 04</span>
+        </div>
+        <h2 class="topic-title">Links &amp; images — and why accessibility matters</h2>
+        <div class="topic-body">
+          <p><code>&lt;a&gt;</code> creates a hyperlink. The <code>href</code> attribute sets the destination URL, and <code>target="_blank"</code> opens that link in a new tab instead of the current one.</p>
+          <p><code>&lt;img&gt;</code> embeds an image. <code>src</code> points to the image file, while <code>alt</code> provides a text description of it.</p>
+          <p><code>alt</code> text is not optional decoration: it's read aloud by <strong>screen readers</strong> for visually impaired users, it's shown if the image fails to load, and it's also an <strong>SEO</strong> signal.</p>
+          <p><code>width</code> and <code>height</code> (in pixels) control the rendered size of the image and help the page avoid layout shifts while it's loading.</p>
+          <p>Wrapping an <code>&lt;img&gt;</code> inside an <code>&lt;a&gt;</code> turns the whole image into a clickable link.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><code>&lt;a&gt;</code> بتعمل رابط (Link). الخاصية <code>href</code> بتحدد الوجهة، و<code>target="_blank"</code> بتفتح اللينك في تاب جديد بدل ما يفتح في نفس الصفحة.</p>
+          <p><code>&lt;img&gt;</code> بتعرض صورة. <code>src</code> هو مكان ملف الصورة، و<code>alt</code> هو وصف نصي للصورة.</p>
+          <p>النص الموجود في <code>alt</code> ليس مجرد ديكور: <strong>قارئات الشاشة (Screen Readers)</strong> بتقرأه لذوي الإعاقة البصرية، وبيظهر لو الصورة ما اتحمّلتش، وكمان له تأثير على <strong>السيو (SEO)</strong>.</p>
+          <p><code>width</code> و <code>height</code> (بالبكسل) بيحددوا حجم الصورة، وبيساعدوا الصفحة إنها ما تتحرك أثناء التحميل.</p>
+          <p>لو غلّفت <code>&lt;img&gt;</code> بداخل <code>&lt;a&gt;</code>، الصورة كلها بتتحول لرابط قابل للضغط.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--cyan)"></span> a clickable image, and a plain link</div>
+          <pre><span class="pn">&lt;</span><span class="tg">a</span><span class="pn"> </span><span class="at">href</span><span class="pn">=</span><span class="vl">"https://www.linkedin.com/in/yousef-eldbah/"</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">img</span><span class="pn"> </span><span class="at">src</span><span class="pn">=</span><span class="vl">"profile.jpg"</span><span class="pn"> </span><span class="at">alt</span><span class="pn">=</span><span class="vl">"Yousef Eldbah profile photo"</span><span class="pn"> </span><span class="at">width</span><span class="pn">=</span><span class="vl">"200"</span><span class="pn">&gt;</span>
+<span class="pn">&lt;/</span><span class="tg">a</span><span class="pn">&gt;</span>
+
+<span class="pn">&lt;</span><span class="tg">a</span><span class="pn"> </span><span class="at">href</span><span class="pn">=</span><span class="vl">"https://www.google.com"</span><span class="pn"> </span><span class="at">target</span><span class="pn">=</span><span class="vl">"_blank"</span><span class="pn">&gt;</span><span class="tx">Open Google in a new tab</span><span class="pn">&lt;/</span><span class="tg">a</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 05 LISTS ============ -->
+      <section class="topic" id="lists">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">ol</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 05</span>
+        </div>
+        <h2 class="topic-title">Lists — ordered, unordered &amp; nested</h2>
+        <div class="topic-body">
+          <p><code>&lt;ul&gt;</code> creates an <strong>unordered (bulleted)</strong> list, and <code>&lt;ol&gt;</code> creates an <strong>ordered (numbered)</strong> list. Each item — regardless of list type — is wrapped in <code>&lt;li&gt;</code> (list item).</p>
+          <p>The <code>type</code> attribute on <code>&lt;ol&gt;</code> controls the numbering style. The default is <code>"1"</code> (1, 2, 3...), but it can be changed to letters or Roman numerals:</p>
+        </div>
+
+        <div class="variant-grid">
+          <div class="v"><span class="k">type="1"</span><span class="out">1, 2, 3</span></div>
+          <div class="v"><span class="k">type="A"</span><span class="out">A, B, C</span></div>
+          <div class="v"><span class="k">type="a"</span><span class="out">a, b, c</span></div>
+          <div class="v"><span class="k">type="I"</span><span class="out">I, II, III</span></div>
+          <div class="v"><span class="k">type="i"</span><span class="out">i, ii, iii</span></div>
+        </div>
+
+        <div class="topic-body">
+          <p>Lists can also be <strong>nested</strong>: an <code>&lt;li&gt;</code> can contain its own <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code>. This is useful for grouping sub-topics — for example, listing "Margin" and "Padding" as sub-items under "CSS" inside a bigger Front-End list.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><code>&lt;ul&gt;</code> بتعمل قائمة <strong>غير مرتبة (نقاط/Bullets)</strong>، و<code>&lt;ol&gt;</code> بتعمل قائمة <strong>مرتبة بالأرقام</strong>. وكل عنصر في القائمة — في الحالتين — بيُكتب داخل <code>&lt;li&gt;</code>.</p>
+          <p>الخاصية <code>type</code> في <code>&lt;ol&gt;</code> بتحدد شكل الترقيم. الافتراضي هو <code>"1"</code> (1, 2, 3...)، ويمكن تغييره لحروف أو أرقام رومانية كما في الجدول بالأعلى.</p>
+          <p>القوائم ممكن تكون <strong>متداخلة (Nested)</strong>: عنصر <code>&lt;li&gt;</code> يقدر يحتوي على <code>&lt;ul&gt;</code> أو <code>&lt;ol&gt;</code> جديدة بداخله — مفيد لتجميع مواضيع فرعية، مثل عمل "Margin" و"Padding" كعناصر فرعية تحت "CSS" داخل قائمة Front-End الأكبر.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--purple)"></span> a nested ordered/unordered list</div>
+          <pre><span class="pn">&lt;</span><span class="tg">ol</span><span class="pn"> </span><span class="at">type</span><span class="pn">=</span><span class="vl">"I"</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">li</span><span class="pn">&gt;</span><span class="tx">HTML</span><span class="pn">&lt;/</span><span class="tg">li</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">li</span><span class="pn">&gt;</span><span class="tx">CSS</span>
+    <span class="pn">&lt;</span><span class="tg">ul</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">li</span><span class="pn">&gt;</span><span class="tx">Margin</span><span class="pn">&lt;/</span><span class="tg">li</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">li</span><span class="pn">&gt;</span><span class="tx">Padding</span><span class="pn">&lt;/</span><span class="tg">li</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;/</span><span class="tg">ul</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;/</span><span class="tg">li</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">li</span><span class="pn">&gt;</span><span class="tx">JavaScript</span><span class="pn">&lt;/</span><span class="tg">li</span><span class="pn">&gt;</span>
+<span class="pn">&lt;/</span><span class="tg">ol</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 06 TABLES ============ -->
+      <section class="topic" id="tables">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 06</span>
+        </div>
+        <h2 class="topic-title">Tables — structuring tabular data</h2>
+        <div class="topic-body">
+          <p><code>&lt;table&gt;</code> holds tabular data. <code>&lt;thead&gt;</code> groups the header row(s), and <code>&lt;tbody&gt;</code> groups the body rows.</p>
+          <p>Each row is a <code>&lt;tr&gt;</code> (table row). Header cells use <code>&lt;th&gt;</code> (table header), and regular data cells use <code>&lt;td&gt;</code> (table data).</p>
+          <p>The legacy <code>border</code> attribute adds a visible grid around the table — in modern HTML this is usually handled with CSS instead, but it's still useful for quick prototypes.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><code>&lt;table&gt;</code> بتعمل جدول لعرض بيانات. <code>&lt;thead&gt;</code> فيه عنوان (أو عناوين) الجدول، و<code>&lt;tbody&gt;</code> فيه البيانات نفسها.</p>
+          <p>كل صف بيُكتب في <code>&lt;tr&gt;</code> (Table Row)، وخلايا العنوان بتُكتب في <code>&lt;th&gt;</code> (Table Header)، أما خلايا البيانات العادية بتُكتب في <code>&lt;td&gt;</code> (Table Data).</p>
+          <p>الخاصية القديمة <code>border</code> بتضيف خطوط حول الجدول — في HTML الحديثة الأفضل التحكم فيها بـ CSS، لكنها مفيدة في النماذج السريعة.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--amber)"></span> a simple table with header and body</div>
+          <pre><span class="pn">&lt;</span><span class="tg">table</span><span class="pn"> </span><span class="at">border</span><span class="pn">=</span><span class="vl">"2"</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">thead</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;</span><span class="tg">tr</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">th</span><span class="pn">&gt;</span><span class="tx">Name</span><span class="pn">&lt;/</span><span class="tg">th</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">th</span><span class="pn">&gt;</span><span class="tx">Age</span><span class="pn">&lt;/</span><span class="tg">th</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">th</span><span class="pn">&gt;</span><span class="tx">Job</span><span class="pn">&lt;/</span><span class="tg">th</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;/</span><span class="tg">tr</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;/</span><span class="tg">thead</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">tbody</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;</span><span class="tg">tr</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">td</span><span class="pn">&gt;</span><span class="tx">Ahmed</span><span class="pn">&lt;/</span><span class="tg">td</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">td</span><span class="pn">&gt;</span><span class="tx">25</span><span class="pn">&lt;/</span><span class="tg">td</span><span class="pn">&gt;</span>
+      <span class="pn">&lt;</span><span class="tg">td</span><span class="pn">&gt;</span><span class="tx">Developer</span><span class="pn">&lt;/</span><span class="tg">td</span><span class="pn">&gt;</span>
+    <span class="pn">&lt;/</span><span class="tg">tr</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;/</span><span class="tg">tbody</span><span class="pn">&gt;</span>
+<span class="pn">&lt;/</span><span class="tg">table</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 07 DEFINITION LISTS ============ -->
+      <section class="topic" id="dl">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">dl</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">dt</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">dd</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 07</span>
+        </div>
+        <h2 class="topic-title">Definition lists</h2>
+        <div class="topic-body">
+          <p><code>&lt;dl&gt;</code> wraps a <strong>definition list</strong> — a set of terms and their descriptions.</p>
+          <p><code>&lt;dt&gt;</code> (definition term) holds the term, and <code>&lt;dd&gt;</code> (definition description) holds its explanation, placed right below it.</p>
+          <p>This is handy for glossaries, FAQs, or any term/description pairs.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><code>&lt;dl&gt;</code> بتعمل <strong>قائمة تعريفية</strong> — مجموعة من المصطلحات وتعريفاتها.</p>
+          <p><code>&lt;dt&gt;</code> هو المصطلح نفسه، و<code>&lt;dd&gt;</code> هو شرح المصطلح اللي بييجي تحته مباشرة.</p>
+          <p>مفيدة جدًا في قوائم المصطلحات أو الأسئلة الشائعة.</p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--green)"></span> a small glossary</div>
+          <pre><span class="pn">&lt;</span><span class="tg">dl</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">dt</span><span class="pn">&gt;</span><span class="tx">HTML</span><span class="pn">&lt;/</span><span class="tg">dt</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">dd</span><span class="pn">&gt;</span><span class="tx">Language used to structure web pages</span><span class="pn">&lt;/</span><span class="tg">dd</span><span class="pn">&gt;</span>
+
+  <span class="pn">&lt;</span><span class="tg">dt</span><span class="pn">&gt;</span><span class="tx">CSS</span><span class="pn">&lt;/</span><span class="tg">dt</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">dd</span><span class="pn">&gt;</span><span class="tx">Language used to style how pages look</span><span class="pn">&lt;/</span><span class="tg">dd</span><span class="pn">&gt;</span>
+<span class="pn">&lt;/</span><span class="tg">dl</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 08 HEAD & SEO ============ -->
+      <section class="topic" id="head-seo">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span></span>
+          <span class="topic-num">TOPIC 08</span>
+        </div>
+        <h2 class="topic-title">The &lt;head&gt; section &amp; SEO basics</h2>
+        <div class="topic-body">
+          <p>The <code>&lt;head&gt;</code> holds information <em>about</em> the page that isn't displayed directly in the body: the <code>&lt;title&gt;</code>, links to CSS/JS files, and <code>&lt;meta&gt;</code> tags.</p>
+          <ul>
+            <li><code>&lt;title&gt;</code> — sets the text shown on the browser tab. Keep it roughly under <strong>60 characters</strong> so it doesn't get cut off in search results.</li>
+            <li><code>&lt;meta name="description" content="..."&gt;</code> — the snippet often shown under your page's title in search results. Aim for roughly <strong>150–160 characters</strong>.</li>
+            <li><code>&lt;meta name="keywords" content="..."&gt;</code> — relevant keywords for the page. Less influential today, but still used.</li>
+            <li><code>&lt;meta name="author" content="..."&gt;</code> — credits the page's creator.</li>
+          </ul>
+          <p>Putting it all together, the four biggest on-page SEO factors covered so far are:</p>
+        </div>
+
+        <div class="seo-grid">
+          <div class="item"><div class="n">01</div><div class="l">Heading structure (<code>&lt;h1&gt;</code>…<code>&lt;h6&gt;</code>)</div><div class="l ar">ترتيب العناوين</div></div>
+          <div class="item"><div class="n">02</div><div class="l">Image <code>alt</code> text</div><div class="l ar">نص alt للصور</div></div>
+          <div class="item"><div class="n">03</div><div class="l">Page <code>&lt;title&gt;</code></div><div class="l ar">عنوان الصفحة</div></div>
+          <div class="item"><div class="n">04</div><div class="l">Meta description</div><div class="l ar">وصف الميتا</div></div>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><code>&lt;head&gt;</code> فيه معلومات <em>عن</em> الصفحة، ومش معروضة مباشرة في الـ body: زي <code>&lt;title&gt;</code> وربط ملفات CSS/JS وتاجات <code>&lt;meta&gt;</code>.</p>
+          <ul>
+            <li><code>&lt;title&gt;</code> — النص اللي يظهر في تبويب المتصفح (Tab). يُفضّل ألا يزيد عن <strong>65 حرف</strong> تقريبًا.</li>
+            <li><code>&lt;meta name="description"&gt;</code> — الوصف اللي يظهر تحت عنوان الصفحة في نتائج البحث. يُفضّل حوالي <strong>150–160 حرف</strong>.</li>
+            <li><code>&lt;meta name="keywords"&gt;</code> — كلمات مفتاحية تخص الصفحة، تأثيرها أقل الآن لكنها لسه تُستخدم.</li>
+            <li><code>&lt;meta name="author"&gt;</code> — اسم صانع الصفحة.</li>
+          </ul>
+          <p>أهم عوامل السيو (SEO) اللي أخذناها لحد دلوقتي: <strong>1) ترتيب العناوين، 2) نص alt للصور، 3) عنوان الصفحة Title، 4) وصف الميتا Meta Description.</strong></p>
+        </div>
+
+        <div class="code-box">
+          <div class="cb-head"><span class="dot" style="background:var(--pink)"></span> a well-described &lt;head&gt;</div>
+          <pre><span class="pn">&lt;</span><span class="tg">head</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">meta</span><span class="pn"> </span><span class="at">charset</span><span class="pn">=</span><span class="vl">"UTF-8"</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">title</span><span class="pn">&gt;</span><span class="tx">Yousef Eldbah — Full Stack Developer</span><span class="pn">&lt;/</span><span class="tg">title</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">meta</span><span class="pn"> </span><span class="at">name</span><span class="pn">=</span><span class="vl">"description"</span><span class="pn"> </span><span class="at">content</span><span class="pn">=</span><span class="vl">"Portfolio and notes from the Mindloop Academy front-end track."</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">meta</span><span class="pn"> </span><span class="at">name</span><span class="pn">=</span><span class="vl">"keywords"</span><span class="pn"> </span><span class="at">content</span><span class="pn">=</span><span class="vl">"HTML, CSS, JavaScript, Front-End"</span><span class="pn">&gt;</span>
+  <span class="pn">&lt;</span><span class="tg">meta</span><span class="pn"> </span><span class="at">name</span><span class="pn">=</span><span class="vl">"author"</span><span class="pn"> </span><span class="at">content</span><span class="pn">=</span><span class="vl">"Yousef Eldbah"</span><span class="pn">&gt;</span>
+<span class="pn">&lt;/</span><span class="tg">head</span><span class="pn">&gt;</span></pre>
+        </div>
+      </section>
+
+      <!-- ============ 09 EMPTY VS NESTED ============ -->
+      <section class="topic" id="empty-nested">
+        <div class="topic-head">
+          <span class="tag-chip"><span class="p">&lt;</span><span class="t">br</span><span class="p">/&gt;</span></span>
+          <span class="topic-num">TOPIC 09</span>
+        </div>
+        <h2 class="topic-title">Empty tags vs nested tags — quick recap</h2>
+        <div class="topic-body">
+          <p><strong>Empty (self-closing) tags</strong> have no closing tag and no content between them — like <code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>, and <code>&lt;hr&gt;</code>.</p>
+          <p><strong>Nested tags</strong> are elements placed inside other elements — like a <code>&lt;ul&gt;</code> inside an <code>&lt;li&gt;</code>, or an <code>&lt;img&gt;</code> inside an <code>&lt;a&gt;</code>. Nesting is how the page builds its overall structure tree.</p>
+        </div>
+
+        <div class="divider-ar"><span class="lbl">الشرح بالعربي</span></div>
+        <div class="ar-block">
+          <p><strong>التاجات الـ Empty</strong> ملهاش تاج إغلاق ولا محتوى بينها — زي <code>&lt;br&gt;</code> و <code>&lt;img&gt;</code> و <code>&lt;hr&gt;</code>.</p>
+          <p><strong>التاجات الـ Nested (المتداخلة)</strong> هي عناصر موجودة جوه عناصر أخرى — زي <code>&lt;ul&gt;</code> جوه <code>&lt;li&gt;</code>، أو <code>&lt;img&gt;</code> جوه <code>&lt;a&gt;</code>. التداخل ده هو اللي بيبني شجرة (Tree) هيكل الصفحة كلها.</p>
+        </div>
+      </section>
+
+      <!-- ============ ASSIGNMENT ============ -->
+      <section class="topic" id="assignment">
+        <div class="topic-head">
+          <span class="tag-chip concept"><span class="p">//</span> assignment</span>
+          <span class="topic-num">HOMEWORK</span>
+        </div>
+        <h2 class="topic-title">Build your personal profile page</h2>
+        <div class="topic-body">
+          <p>Using only the tags from this session, build a single HTML page that works as your personal profile / portfolio intro. Save it as one <code>.html</code> file and send it over for review.</p>
+        </div>
+
+        <div class="assignment">
+          <h3>Checklist</h3>
+          <ul class="checklist">
+            <li><span class="box"></span> One <code>&lt;h1&gt;</code> with your name, and <code>&lt;h2&gt;</code> sections for <strong>About</strong>, <strong>Skills</strong>, and <strong>Contact</strong>.</li>
+            <li><span class="box"></span> At least one <code>&lt;p&gt;</code> describing yourself — use <code>&lt;br&gt;</code> where a manual line break makes sense.</li>
+            <li><span class="box"></span> A profile photo with <code>&lt;img&gt;</code> (meaningful <code>alt</code> text), optionally wrapped in an <code>&lt;a&gt;</code> linking to one of your social profiles.</li>
+            <li><span class="box"></span> A skills list using <code>&lt;ul&gt;</code>, with at least one <code>&lt;ol&gt;</code> somewhere (try a non-default <code>type</code>).</li>
+            <li><span class="box"></span> A <code>&lt;table&gt;</code> listing tools/technologies and your experience level for each.</li>
+            <li><span class="box"></span> A small <code>&lt;dl&gt;</code> glossary with 2–3 terms relevant to your field.</li>
+            <li><span class="box"></span> A complete <code>&lt;head&gt;</code> with a descriptive <code>&lt;title&gt;</code>, plus <code>description</code>, <code>keywords</code> and <code>author</code> meta tags.</li>
+          </ul>
+        </div>
+
+        <div class="assignment" style="margin-top:1rem;">
+          <h3 class="ar">قائمة التسليم</h3>
+          <ul class="checklist ar">
+            <li><span class="box"></span> عنصر <code>&lt;h1&gt;</code> واحد باسمك، وعناصر <code>&lt;h2&gt;</code> لأقسام <strong>About</strong>، <strong>Skills</strong>، <strong>Contact</strong>.</li>
+            <li><span class="box"></span> فقرة <code>&lt;p&gt;</code> على الأقل تتكلم عن نفسك — واستخدم <code>&lt;br&gt;</code> لو احتجت سطر جديد داخل نفس الفقرة.</li>
+            <li><span class="box"></span> صورة بروفايل بـ <code>&lt;img&gt;</code> (مع <code>alt</code> واضح)، ويمكن تغليفها بـ <code>&lt;a&gt;</code> تروح لأحد حساباتك.</li>
+            <li><span class="box"></span> قائمة مهارات بـ <code>&lt;ul&gt;</code>، مع <code>&lt;ol&gt;</code> واحدة على الأقل بنوع ترقيم غير الافتراضي.</li>
+            <li><span class="box"></span> جدول <code>&lt;table&gt;</code> فيه الأدوات/التقنيات ومستوى خبرتك في كل واحدة.</li>
+            <li><span class="box"></span> قائمة تعريفية <code>&lt;dl&gt;</code> فيها 2-3 مصطلحات تخص مجالك.</li>
+            <li><span class="box"></span> <code>&lt;head&gt;</code> كامل فيه <code>&lt;title&gt;</code> واضح، مع meta tags لـ description وkeywords وauthor.</li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <div class="sig"><span class="accent">&lt;/</span>session-01<span class="accent">&gt;</span> — Mindloop Academy, Front-End → React track</div>
+        <div class="flinks">
+          <a href="https://www.linkedin.com/in/yousef-eldbah/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="https://www.facebook.com/p/Mindloop-Academy-61561250038443/" target="_blank" rel="noopener">Mindloop Academy on Facebook ↗</a>
+        </div>
+        <div class="copy">Yousef Eldbah · Full-Stack Developer</div>
+      </div>
+    </footer>
+  </main>
+</div>
+</body>
+</html>
